@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style type="text/css">
+        body, html,#allmap {width: 100%;height: 100%;overflow: hidden;margin:0;font-family:"微软雅黑";}
+    </style>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=dnTeK9nGVeFhbvvWZ2eTKHjI"></script>
+    <title>批量转换</title>
+</head>
+<body>
+    <div id="allmap"></div>
+</body>
+</html>
+<script type="text/javascript">
+
+    var points = [new BMap.Point(106.7559149,26.64927187),
+                  new BMap.Point(106.7548409,26.65040994),
+                  new BMap.Point(106.7543024,26.65099921),
+                  new BMap.Point(106.7485565,26.64961071),
+                  new BMap.Point(106.7452567,26.6453472),
+                  new BMap.Point(106.7446643,26.64306609),
+                  new BMap.Point(106.7421436,26.64152992),
+                  new BMap.Point(106.7393024,26.63923683),
+                  new BMap.Point(106.7374913,26.63745877),
+                  new BMap.Point(106.7351587,26.63482626)/*,
+                  new BMap.Point(106.7297985,26.62933953),
+                  new BMap.Point(106.7274599,26.6289537),
+                  new BMap.Point(106.7238319,26.62598359),
+                  new BMap.Point(106.7196637,26.62273883),
+                  new BMap.Point(106.7101342,26.62021281),
+                  new BMap.Point(106.7094451,26.62024539),
+                  new BMap.Point(106.7084581,26.62006171),
+                  new BMap.Point(106.7067452,26.61994539),
+                  new BMap.Point(106.7047499,26.61961267)*/
+    ];
+
+    //地图初始化
+    var bm = new BMap.Map("allmap");
+    bm.centerAndZoom(new BMap.Point(106.75,26.63), 15);
+
+    //坐标转换完之后的回调函数
+    translateCallback = function (data){
+      if(data.status === 0) {
+        for (var i = 0; i < data.points.length; i++) {
+            bm.addOverlay(new BMap.Marker(data.points[i]));
+            bm.setCenter(data.points[i]);
+        }
+      }
+    }
+    setTimeout(function(){
+        var convertor = new BMap.Convertor();
+        convertor.translate(points, 1, 5, translateCallback)
+    }, 1000);
+</script>

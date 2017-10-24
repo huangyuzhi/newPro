@@ -1,0 +1,16 @@
+/*,
+Page style
+*/
+body{
+    padding-top: 85px;
+}
+.navbar{
+ min-height: 90px;
+}
+.navbar-default{
+    padding: 10px;
+}
+.jumbotron{
+    height: 100px;
+    padding-top: 20px;
+}

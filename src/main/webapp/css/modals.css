@@ -1,0 +1,30 @@
+.list-inline>li {
+    padding-left: 75px;
+}
+.bootstrap-select > .dropdown-toggle{
+    width: 220px;
+}
+/* .form-control{
+    width: 220px;
+} */
+p{
+    margin: 0 0 25px;
+    color: #fff;
+}
+.modal-content{
+    background-image: url(../img/blue.png);
+}
+.modal.in .modal-dialog{
+    transform: translate(0px, 150px);
+    margin-top:-50px;
+}
+.username{
+    font-weight: bold;
+    color: red;
+}
+.form-control.bootstrap-select{
+    background-color: transparent;
+}
+.form-map-line label{
+    color: #fff;
+}

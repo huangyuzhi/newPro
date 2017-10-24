@@ -1,0 +1,40 @@
+.page-register{
+/*背景图*/
+background-image: url(../img/89d2029ffbff694503f7526b08262fca_big.png);
+
+/* 背景图垂直、水平均居中 */
+background-position: center center;
+
+/* 背景图不平铺 */
+background-repeat: no-repeat;
+
+/* 当内容高度大于图片高度时，背景图像的位置相对于viewport固定 */
+background-attachment: fixed;
+
+/* 让背景图基于容器大小伸缩 */
+background-size: cover;
+}
+
+.title{
+	font-weight: bold;
+	font-size: 22px;			
+}
+
+.mt-120{
+	margin-top: 120px;
+}
+
+.register-layout{
+	display: inline-block;
+	width: 100%;
+	padding: 0 10px 20px 10px;
+	background-color:rgba(44,116,160,.7);
+	border-radius: 2px;
+	box-shadow:10px 10px 20px rgba(0,0,0,0.3);
+	color: #fff;
+	border: 2px solid #2c74a0;
+}
+
+.register-layout .form-control{
+	border-radius: 20px;
+}

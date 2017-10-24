@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:dwr="http://www.directwebremoting.org/schema/spring-dwr"
+	xsi:schemaLocation="  
+	http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-3.1.xsd 
+	http://www.springframework.org/schema/mvc
+	http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
+	http://www.springframework.org/schema/context 
+	http://www.springframework.org/schema/context/spring-context-3.1.xsd 
+	http://www.springframework.org/schema/aop 
+	http://www.springframework.org/schema/aop/spring-aop-3.1.xsd 
+	http://www.springframework.org/schema/tx 
+	http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
+	http://www.directwebremoting.org/schema/spring-dwr
+	spring-dwr-3.0.xsd"
+	default-lazy-init="false">
+
+	<context:annotation-config />
+	<mvc:annotation-driven />
+	<!-- 根据情况改动base-package，springMvc会扫描指定的包及其子包 -->
+	<context:component-scan base-package="com.chains.core.controller" />
+	<context:component-scan base-package="com.chains.pwqxfwjk.controller" />
+	<context:component-scan base-package="com.chains.weixin.controller"></context:component-scan>
+
+	<!-- 要求dwr在spring容器中检查拥有@RemoteProxy 和 @RemoteMethod注解的类。注意它不会去检查Spring容器之外的类。 -->
+	<dwr:annotation-config id="dwr" />
+	<dwr:url-mapping />
+	<dwr:configuration>
+		<dwr:convert type="bean" class="com.chains.util.Json"></dwr:convert>
+		<dwr:convert type="bean"
+			class="com.chains.pwqxfwjk.model.LineInfoFor10kV"></dwr:convert>
+	</dwr:configuration>
+	<dwr:controller id="dwrController" debug="true">
+		<dwr:config-param name="allowGetForSafariButMakeForgeryEasier"
+			value="true" />
+		<dwr:config-param name="allowScriptTagRemoting"
+			value="true" />
+		<dwr:config-param name="crossDomainSessionSecurity"
+			value="false" />
+		<dwr:config-param name="pollAndCometEnabled" value="true" />
+		<dwr:config-param name="activeReverseAjaxEnabled"
+			value="true" />
+		<dwr:config-param name="org.directwebremoting.extend.ServerLoadMonitor"
+			value="org.directwebremoting.impl.PollingServerLoadMonitor" />
+		<dwr:config-param name="disconnectedTime" value="1000" />
+	</dwr:controller>
+
+	<!-- 避免IE执行AJAX时,返回JSON出现下载文件 -->
+	<bean id="mappingJacksonHttpMessageConverter"
+		class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
+		<property name="prefixJson" value="false" />
+		<property name="supportedMediaTypes">
+			<list>
+				<value>text/plain;charset=UTF-8</value>
+				<value>application/json;charset=UTF-8</value>
+				<value>text/json;charset=UTF-8</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean
+		class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
+		<property name="order" value="1" />
+	</bean>
+	<bean
+		class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+		<property name="messageConverters">
+			<list>
+				<bean class="org.springframework.http.converter.ByteArrayHttpMessageConverter"/>  
+				<ref bean="mappingJacksonHttpMessageConverter" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="messageSource"
+		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="basename" value="/WEB-INF/classes/messages_zh_CN" />
+		<property name="fileEncodings" value="utf-8" />
+		<property name="cacheSeconds" value="120" />
+	</bean>
+
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver"
+		p:prefix="/WEB-INF/jsp/" p:suffix=".jsp" />
+
+	<!-- ViewResolver For FreeMarker -->
+
+
+
+	<!-- 自定义拦截链配置 -->
+	<!-- <mvc:interceptors> <mvc:interceptor> <mvc:mapping path="/**" /> <bean 
+		class="com.chains.security.CommonInterceptor"> <property name="mappingURL"> 
+		<list> <value>/*</value> </list> </property> <property name="debug" value="true"></property> 
+		</bean> </mvc:interceptor> </mvc:interceptors> -->
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="defaultEncoding">
+			<value>UTF-8</value>
+		</property>
+		<!-- set the max upload size100MB -->
+		<property name="maxUploadSize" value="104857600"></property>
+		<property name="maxInMemorySize">
+			<value>1024000</value>
+		</property>
+	</bean>
+	<bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+		<property name="order" value="3" />
+		<property value="true" name="alwaysUseFullPath"></property>
+	</bean>
+	<!-- 自定义拦截链配置 -->
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<bean class="com.chains.security.CommonInterceptor">
+				<property name="mappingURL">
+					<list>
+						<value>/*</value>
+					</list>
+				</property>
+				<property name="debug" value="true"></property>
+			</bean>
+		</mvc:interceptor>
+	</mvc:interceptors>
+	<bean
+		class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">
+		<property name="interceptors">
+			<list>
+				<bean class="com.chains.security.CommonInterceptor" />
+			</list>
+		</property>
+	</bean>
+</beans>
