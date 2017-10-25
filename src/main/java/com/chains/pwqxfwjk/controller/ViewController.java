@@ -24,6 +24,6 @@ public class ViewController {
 	@StringResult("权限不足")
 	@RequestMapping(value = "/mapInterface2")
 	public String mapImprove2() {
-		return "mapInterface2";
+		return "mapInterface3";
 	}
 }
